@@ -319,12 +319,12 @@
             display: flex;
             gap: 0.5em;
             align-items: center;
-            font-size: 48px;
+            font-size: 32px;
         }
 
         .switch__icon {
-            width: 1.2em;
-            height: 1.2em;
+            width: 1em;
+            height: 1em;
             transition: all 0.3s;
         }
 
@@ -499,6 +499,114 @@
             height: calc(100% - 4px);
             background-color: rgba(0, 0, 0, 0.15);
             box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.75), inset 0 2px 2px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body {
+                overflow-y: auto;
+            }
+
+            .jacket-item {
+                display: none;
+            }
+
+            .jacket-item:nth-child(-n+4) {
+                display: block;
+            }
+
+            .jacket-item img {
+                max-width: 150px;
+            }
+
+            .center-content {
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                padding: 60px 20px;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .center-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .center-content h2 {
+                font-size: 4.5rem;
+                margin-bottom: 20px;
+            }
+
+            .controls {
+                margin-bottom: 20px;
+            }
+
+            .switch {
+                font-size: 24px;
+            }
+
+            .input-note input {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .footer {
+                position: relative;
+                padding: 20px 0;
+            }
+
+            .footer-credit {
+                font-size: 0.75rem;
+                padding: 0 20px;
+                text-align: center;
+            }
+
+            .result-content {
+                padding: 20px;
+            }
+
+            .result-content .answer {
+                font-size: 5rem;
+            }
+
+            .result-content .reasoning {
+                font-size: 1.2rem;
+            }
+
+            .result-content .weather-info {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .result-content .weather-item .value {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .center-content h1 {
+                font-size: 2rem;
+            }
+
+            .center-content h2 {
+                font-size: 3.5rem;
+            }
+
+            .switch {
+                font-size: 20px;
+            }
+
+            .button-top {
+                padding: 8px 14px;
+                font-size: 0.9rem;
+            }
+
+            .result-content .answer {
+                font-size: 4rem;
+            }
         }
     </style>
 </head>
