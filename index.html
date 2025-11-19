@@ -3,79 +3,662 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Should I Bring a Jacket?</title>
+    <title>Should I Bring a Jacket? - Mood Board</title>
     <meta name="description" content="Find out if you need a jacket based on your local weather conditions">
-    <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f3ef;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Draggable jackets */
+        .jacket-item {
+            position: absolute;
+            cursor: grab;
+            user-select: none;
+            transition: box-shadow 0.2s, transform 0.1s;
+            z-index: 1;
+        }
+
+        .jacket-item:active {
+            cursor: grabbing;
+            z-index: 100;
+        }
+
+        .jacket-item:hover {
+            z-index: 50;
+        }
+
+        .jacket-item img {
+            max-width: 350px;
+            height: auto;
+            filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.1));
+            pointer-events: none;
+        }
+
+        /* Center content */
+        .center-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 50;
+        }
+
+        .center-content h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 4rem;
+            font-weight: 400;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .center-content h2 {
+            font-family: 'Caveat', cursive;
+            font-size: 7rem;
+            font-weight: 700;
+            color: #333;
+            line-height: 0.9;
+            margin-bottom: 30px;
+        }
+
+        /* Location input */
+        .input-note {
+            background: transparent;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .input-note p {
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .input-note input {
+            width: 250px;
+            padding: 10px 15px;
+            border: 2px solid #333;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .input-note input:focus {
+            outline: none;
+        }
+
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #333;
+            border-top: none;
+            list-style: none;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .suggestions.hidden {
+            display: none;
+        }
+
+        .suggestions li {
+            padding: 8px 12px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .suggestions li:hover {
+            background: #f5f5f5;
+        }
+
+        .location-name {
+            font-weight: 600;
+        }
+
+        .location-detail {
+            color: #666;
+            font-size: 0.75rem;
+        }
+
+        /* Result overlay */
+        .result-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(245, 243, 239, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .result-overlay.visible {
+            display: flex;
+        }
+
+        .result-content {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .result-content .answer {
+            font-family: 'Caveat', cursive;
+            font-size: 8rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .result-content .answer.yes { color: #FF5252; }
+        .result-content .answer.maybe { color: #F57C00; }
+        .result-content .answer.no { color: #4CAF50; }
+
+        .result-content .reasoning {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .result-content .weather-info {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .result-content .weather-item {
+            text-align: center;
+        }
+
+        .result-content .weather-item .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .result-content .weather-item .value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .result-content .btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+        }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 300;
+            display: none;
+        }
+
+        .loading.visible {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .btn-icon {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .footer-credit {
+            font-size: 0.7rem;
+            color: #666;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-credit a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .footer-credit a:hover {
+            text-decoration: underline;
+        }
+
+        /* Controls - above header */
+        .controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        /* Gender Toggle Switch */
+        .switch {
+            --hue: 30;
+            --bg: #f5f3ef;
+            --fg: #333;
+            --light-sh: hsla(var(--hue),10%,95%,0.5);
+            --dark-sh: hsla(var(--hue),10%,15%,0.4);
+            --primary: hsl(340,70%,55%);
+            --primary-t: hsla(340,70%,55%,0);
+            display: flex;
+            gap: 0.5em;
+            align-items: center;
+            font-size: 48px;
+        }
+
+        .switch__icon,
+        .switch__icon-part {
+            display: block;
+        }
+
+        .switch__icon {
+            position: relative;
+            width: 1em;
+            height: 1em;
+            transition: filter 0.3s;
+        }
+
+        .switch__icon-part {
+            position: absolute;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* Male icon */
+        .switch__icon--male {
+            filter: drop-shadow(0 0 0.125em hsla(210,90%,70%,0.2));
+        }
+
+        .switch__icon--male .switch__icon-part {
+            background-color: hsla(210,90%,60%,1);
+        }
+
+        .switch__icon--male .switch__icon-part--1 {
+            border-radius: 50%;
+            box-shadow: 0 0.0625em 0.0625em var(--dark-sh) inset, 0 0.0625em 0.0625em var(--light-sh);
+            top: 0.35em;
+            left: 0.15em;
+            width: 0.45em;
+            height: 0.45em;
+            border: 0.08em solid hsla(210,90%,60%,1);
+            background: transparent;
+        }
+
+        .switch__icon--male .switch__icon-part--2 {
+            top: 0.15em;
+            right: 0.15em;
+            width: 0.35em;
+            height: 0.08em;
+            transform: rotate(-45deg);
+            transform-origin: right center;
+        }
+
+        .switch__icon--male .switch__icon-part--3 {
+            top: 0.15em;
+            right: 0.15em;
+            width: 0.08em;
+            height: 0.25em;
+        }
+
+        .switch__icon--male .switch__icon-part--4 {
+            top: 0.15em;
+            right: 0.15em;
+            width: 0.25em;
+            height: 0.08em;
+        }
+
+        /* Female icon */
+        .switch__icon--female {
+            filter: drop-shadow(0 0 0.125em hsla(340,90%,70%,0));
+        }
+
+        .switch__icon--female .switch__icon-part {
+            background-color: hsla(var(--hue),10%,10%,0.3);
+        }
+
+        .switch__icon--female .switch__icon-part--1 {
+            border-radius: 50%;
+            box-shadow: 0 0.0625em 0.0625em var(--dark-sh) inset, 0 0.0625em 0.0625em var(--light-sh);
+            top: 0.1em;
+            left: 0.275em;
+            width: 0.45em;
+            height: 0.45em;
+            border: 0.08em solid hsla(var(--hue),10%,10%,0.3);
+            background: transparent;
+        }
+
+        .switch__icon--female .switch__icon-part--2 {
+            top: 0.5em;
+            left: 0.46em;
+            width: 0.08em;
+            height: 0.35em;
+        }
+
+        .switch__icon--female .switch__icon-part--3 {
+            top: 0.65em;
+            left: 0.35em;
+            width: 0.3em;
+            height: 0.08em;
+        }
+
+        .switch__input {
+            background-color: hsla(var(--hue),10%,10%,0.1);
+            border-radius: 0.75em;
+            box-shadow:
+                0 0.0625em 0.125em var(--dark-sh) inset,
+                0 0.0625em 0.125em var(--light-sh),
+                0 0 0 0.125em var(--primary-t);
+            display: block;
+            outline: transparent;
+            position: relative;
+            width: 2.5em;
+            height: 1.5em;
+            transition: box-shadow 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+            border: none;
+        }
+
+        .switch__input:focus-visible {
+            box-shadow:
+                0 0.0625em 0.125em var(--dark-sh) inset,
+                0 0.0625em 0.125em var(--light-sh),
+                0 0 0 0.125em var(--primary);
+        }
+
+        .switch__input::before {
+            background-color: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0.0625em 0.125em hsla(var(--hue),10%,10%,0.5);
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0.25em;
+            left: 0.25em;
+            width: 1em;
+            height: 1em;
+            transition:
+                background-color 0.3s,
+                box-shadow 0.3s,
+                transform 0.3s cubic-bezier(0.65,0.05,0.34,1);
+        }
+
+        .switch__input:checked::before {
+            transform: translateX(1em);
+        }
+
+        .switch__label {
+            overflow: hidden;
+            position: absolute;
+            width: 1px;
+            height: 1px;
+        }
+
+        /* When checked (female) */
+        .switch:has(.switch__input:checked) .switch__icon--male {
+            filter: drop-shadow(0 0 0.125em hsla(210,90%,70%,0));
+        }
+
+        .switch:has(.switch__input:checked) .switch__icon--male .switch__icon-part {
+            background-color: hsla(var(--hue),10%,10%,0.3);
+        }
+
+        .switch:has(.switch__input:checked) .switch__icon--male .switch__icon-part--1 {
+            border-color: hsla(var(--hue),10%,10%,0.3);
+        }
+
+        .switch:has(.switch__input:checked) .switch__icon--female {
+            filter: drop-shadow(0 0 0.125em hsla(340,90%,70%,0.6));
+        }
+
+        .switch:has(.switch__input:checked) .switch__icon--female .switch__icon-part {
+            background-color: hsla(340,90%,60%,1);
+        }
+
+        .switch:has(.switch__input:checked) .switch__icon--female .switch__icon-part--1 {
+            border-color: hsla(340,90%,60%,1);
+        }
+
+        /* 3D Button Style */
+        .button-3d {
+            position: relative;
+            padding: 0 8px 12px;
+            min-width: 60px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 0;
+            padding: 10px 18px;
+            transform: translateY(0);
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 -1px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s;
+            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .button-3d:active .button-top {
+            transform: translateY(6px);
+        }
+
+        .button-top::after {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            box-sizing: content-box;
+            background-image: radial-gradient(#cd3f64, #9d3656);
+            box-shadow: inset 0 0 0px 1px rgba(255, 255, 255, 0.2), 0 1px 2px 1px rgba(255, 255, 255, 0.2);
+            transition: border-radius 0.2s, padding 0.2s, width 0.2s, transform 0.2s;
+        }
+
+        .button-3d:active .button-top::after {
+            border-radius: 6px;
+            padding: 0 2px;
+        }
+
+        .button-bottom {
+            position: absolute;
+            z-index: -1;
+            bottom: 4px;
+            left: 4px;
+            border-radius: 8px / 16px 16px 8px 8px;
+            padding-top: 6px;
+            width: calc(100% - 8px);
+            height: calc(100% - 10px);
+            box-sizing: content-box;
+            background-color: #803;
+            background-image:
+                radial-gradient(4px 8px at 4px calc(100% - 8px), rgba(255, 255, 255, 0.25), transparent),
+                radial-gradient(4px 8px at calc(100% - 4px) calc(100% - 8px), rgba(255, 255, 255, 0.25), transparent),
+                radial-gradient(16px at -4px 0, rgba(255, 255, 255, 1), transparent),
+                radial-gradient(16px at calc(100% + 4px) 0, rgba(255, 255, 255, 1), transparent);
+            box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.5), inset 0px -1px 3px 3px rgba(0, 0, 0, 0.4);
+            transition: border-radius 0.2s, padding-top 0.2s;
+        }
+
+        .button-3d:active .button-bottom {
+            border-radius: 10px 10px 8px 8px / 8px;
+            padding-top: 0;
+        }
+
+        .button-base {
+            position: absolute;
+            z-index: -2;
+            top: 4px;
+            left: 0;
+            border-radius: 12px;
+            width: 100%;
+            height: calc(100% - 4px);
+            background-color: rgba(0, 0, 0, 0.15);
+            box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.75), inset 0 2px 2px rgba(0, 0, 0, 0.25);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <!-- Loading State -->
-        <div id="loading" class="state hidden">
+        <!-- Draggable jackets scattered around -->
+        <div class="jacket-item" style="top: 5%; left: 5%; transform: rotate(-5deg);">
+            <img src="jackets/1bca19114c14bcc98f4d6e15e879d6f7.png" alt="Jacket">
+        </div>
+        <div class="jacket-item" style="top: 10%; right: 10%; transform: rotate(3deg);">
+            <img src="jackets/6f89fcf7a3acf73e976ddb0e29f86698.png" alt="Jacket">
+        </div>
+        <div class="jacket-item" style="top: 60%; left: 3%; transform: rotate(8deg);">
+            <img src="jackets/8bb74e4411d327f49d62dd4efab8fb74.png" alt="Jacket">
+        </div>
+        <div class="jacket-item" style="top: 65%; right: 5%; transform: rotate(-4deg);">
+            <img src="jackets/9f0ac0679bc4a36419f25868b59c48f7.png" alt="Jacket">
+        </div>
+        <div class="jacket-item" style="top: 15%; left: 20%; transform: rotate(-3deg);">
+            <img src="jackets/4210e5adb19db9dd0b7d0039603edd7a.png" alt="Jacket">
+        </div>
+        <div class="jacket-item" style="top: 20%; right: 20%; transform: rotate(6deg);">
+            <img src="jackets/eb7e044be40bb0d586e859627d538b35.png" alt="Jacket">
+        </div>
+        <div class="jacket-item" style="bottom: 25%; left: 10%; transform: rotate(2deg);">
+            <img src="jackets/cbba208285dffd2384a4cf4bd9706abc.png" alt="Jacket">
+        </div>
+        <div class="jacket-item" style="bottom: 20%; right: 15%; transform: rotate(-7deg);">
+            <img src="jackets/b969bba3af3c94b29409049c2fed717b.png" alt="Jacket">
+        </div>
+        <div class="jacket-item" style="top: 45%; left: 3%; transform: rotate(4deg);">
+            <img src="jackets/b866ccaf4f2a77886b31bd7124fbecfc.png" alt="Jacket">
+        </div>
+        <div class="jacket-item" style="top: 40%; right: 3%; transform: rotate(-2deg);">
+            <img src="jackets/7081de40f5b0251b49c8acd187786162.png" alt="Jacket">
+        </div>
+        <div class="jacket-item" style="bottom: 10%; left: 35%; transform: rotate(5deg);">
+            <img src="jackets/4855cab737ab8365b67fb364289eba1b.png" alt="Jacket">
+        </div>
+
+        <!-- Center content with title and input -->
+        <div class="center-content">
+            <div class="controls">
+                <div class="switch">
+                    <span class="switch__icon switch__icon--male">
+                        <span class="switch__icon-part switch__icon-part--1"></span>
+                        <span class="switch__icon-part switch__icon-part--2"></span>
+                        <span class="switch__icon-part switch__icon-part--3"></span>
+                        <span class="switch__icon-part switch__icon-part--4"></span>
+                    </span>
+                    <input class="switch__input" type="checkbox" id="gender-toggle">
+                    <label class="switch__label" for="gender-toggle">Toggle gender</label>
+                    <span class="switch__icon switch__icon--female">
+                        <span class="switch__icon-part switch__icon-part--1"></span>
+                        <span class="switch__icon-part switch__icon-part--2"></span>
+                        <span class="switch__icon-part switch__icon-part--3"></span>
+                    </span>
+                </div>
+                <button id="mute-btn" class="button-3d" title="Toggle music">
+                    <span class="button-top">🔇</span>
+                    <span class="button-bottom"></span>
+                    <span class="button-base"></span>
+                </button>
+            </div>
+            <h1>Should I bring a</h1>
+            <h2>JACKET?</h2>
+            <div class="input-note">
+                <p>Where are you?</p>
+                <input type="text" id="location-input" placeholder="Enter city name" autocomplete="off">
+                <ul id="location-suggestions" class="suggestions hidden"></ul>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>Checking weather...</p>
         </div>
 
-        <!-- Permission Request State -->
-        <div id="permission" class="state">
-            <header>
-                <h1>Should I bring a</h1>
-                <h2>JACKET<span class="accent">?</span></h2>
-            </header>
-
-            <div class="carousel">
-                <button class="carousel-btn prev" id="carousel-prev">&lt;</button>
-                <div class="carousel-track" id="carousel-track">
-                    <img src="jackets/1bca19114c14bcc98f4d6e15e879d6f7.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/6f89fcf7a3acf73e976ddb0e29f86698.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/8bb74e4411d327f49d62dd4efab8fb74.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/9f0ac0679bc4a36419f25868b59c48f7.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/4210e5adb19db9dd0b7d0039603edd7a.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/eb7e044be40bb0d586e859627d538b35.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/cbba208285dffd2384a4cf4bd9706abc.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/b969bba3af3c94b29409049c2fed717b.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/b866ccaf4f2a77886b31bd7124fbecfc.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/7081de40f5b0251b49c8acd187786162.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/4855cab737ab8365b67fb364289eba1b.png" alt="Jacket" class="carousel-item">
-                </div>
-                <button class="carousel-btn next" id="carousel-next">&gt;</button>
-            </div>
-
-            <div class="location-input-section">
-                <p class="input-label">Enter your location</p>
-                <div class="input-wrapper">
-                    <input type="text" id="location-input" placeholder="City name or ZIP code" autocomplete="off">
-                    <ul id="location-suggestions" class="suggestions hidden"></ul>
-                </div>
-                <button id="allow-location" class="btn btn-link">or use my current location</button>
-            </div>
-        </div>
-
-        <!-- Result State -->
-        <div id="result" class="state hidden">
-            <header>
-                <h1 id="answer-text">Should you bring a</h1>
-                <h2 id="answer-display">JACKET<span class="accent">?</span></h2>
-            </header>
-
-            <div class="answer-section">
+        <!-- Result overlay -->
+        <div class="result-overlay" id="result">
+            <div class="result-content">
                 <div id="answer" class="answer">YES</div>
                 <p id="jacket-type" class="jacket-type"></p>
-            </div>
-
-            <div class="carousel result-carousel">
-                <button class="carousel-btn prev" id="result-carousel-prev">&lt;</button>
-                <div class="carousel-track" id="result-carousel-track">
-                    <img src="jackets/1bca19114c14bcc98f4d6e15e879d6f7.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/6f89fcf7a3acf73e976ddb0e29f86698.png" alt="Jacket" class="carousel-item">
-                    <img src="jackets/8bb74e4411d327f49d62dd4efab8fb74.png" alt="Jacket" class="carousel-item">
-                </div>
-                <button class="carousel-btn next" id="result-carousel-next">&gt;</button>
-            </div>
-
-            <div class="details">
                 <p id="reasoning" class="reasoning"></p>
                 <div class="weather-info">
                     <div class="weather-item">
@@ -91,32 +674,335 @@
                         <span id="wind-speed" class="value">-- mph</span>
                     </div>
                 </div>
-                <p id="location-name" class="location-name"></p>
+                <p id="location-name" style="color: #666; font-size: 0.875rem;"></p>
+                <button class="btn" id="change-location">Check another location</button>
             </div>
-
-            <button id="change-location" class="btn btn-link">Change location</button>
         </div>
 
-        <!-- Error State -->
-        <div id="error" class="state hidden">
-            <header>
-                <h1>Oops</h1>
-                <h2>SOMETHING WENT WRONG<span class="accent">!</span></h2>
-            </header>
-            <p id="error-message">Could not fetch weather data</p>
-            <button id="retry" class="btn btn-primary">Try Again</button>
-        </div>
-
-        <footer>
-            <button id="toggle-units" class="btn btn-icon" title="Toggle °F/°C">°F</button>
+        <div class="footer">
+            <button id="toggle-units" class="btn-icon" title="Toggle °F/°C">°F</button>
             <p class="footer-credit">
                 built on a tuesday night by <a href="https://x.com/colored_savage" target="_blank">savage</a> with support from <a href="https://x.com/heyohelen" target="_blank">helen</a>
             </p>
-        </footer>
+        </div>
+
+        <audio id="bg-music" loop>
+            <source src="music/background.mp3" type="audio/mpeg">
+        </audio>
     </div>
 
     <script src="js/weather.js"></script>
     <script src="js/decision.js"></script>
-    <script src="js/app.js"></script>
+    <script>
+        // Moodboard App
+        const MoodboardApp = {
+            state: {
+                useCelsius: false,
+                weatherData: null,
+                suggestions: [],
+                selectedIndex: -1,
+                searchTimeout: null,
+                isMale: true,
+                isMuted: true
+            },
+
+            maleJackets: [
+                'jackets/1bca19114c14bcc98f4d6e15e879d6f7.png',
+                'jackets/6f89fcf7a3acf73e976ddb0e29f86698.png',
+                'jackets/8bb74e4411d327f49d62dd4efab8fb74.png',
+                'jackets/9f0ac0679bc4a36419f25868b59c48f7.png',
+                'jackets/4210e5adb19db9dd0b7d0039603edd7a.png',
+                'jackets/eb7e044be40bb0d586e859627d538b35.png',
+                'jackets/cbba208285dffd2384a4cf4bd9706abc.png',
+                'jackets/b969bba3af3c94b29409049c2fed717b.png',
+                'jackets/b866ccaf4f2a77886b31bd7124fbecfc.png',
+                'jackets/7081de40f5b0251b49c8acd187786162.png',
+                'jackets/4855cab737ab8365b67fb364289eba1b.png'
+            ],
+
+            femaleJackets: [
+                'female-jackets/fd1a3d0e1819193a534c756d9f8fd97f.png',
+                'female-jackets/de455f6ad1bf9385f3eb18c50b2006c8.png',
+                'female-jackets/c758e1955b6ef58c4c6a52af952ccdf0.png',
+                'female-jackets/adc6dbf7475b2102446a9c771ecbe23d.png',
+                'female-jackets/a1a66aa64338edabbff91cd9dfb0f3ae.png',
+                'female-jackets/875ebfb0a264ce780bcfbdc0f36e02bc.png',
+                'female-jackets/83aa03d9b143f67a3b13f94a4b98ac3a.png',
+                'female-jackets/642e34e858d9918b1b58ac39f290c23e.png',
+                'female-jackets/434e838433611705838bd4a77a6da09f.png',
+                'female-jackets/2c92d92ee1fa7a3aa2e32496eca16ff2.png',
+                'female-jackets/21f6b7709222770e2b0eedd79fa1c13c.png'
+            ],
+
+            elements: {},
+
+            init() {
+                this.cacheElements();
+                this.bindEvents();
+                this.initDraggable();
+                this.initAudio();
+            },
+
+            initAudio() {
+                this.elements.music = document.getElementById('bg-music');
+                this.elements.muteBtn = document.getElementById('mute-btn');
+
+                // Try to play on first user interaction
+                document.addEventListener('click', () => {
+                    if (!this.state.isMuted && this.elements.music.paused) {
+                        this.elements.music.play().catch(() => {});
+                    }
+                }, { once: true });
+            },
+
+            cacheElements() {
+                this.elements = {
+                    loading: document.getElementById('loading'),
+                    result: document.getElementById('result'),
+                    locationInput: document.getElementById('location-input'),
+                    suggestions: document.getElementById('location-suggestions'),
+                    answer: document.getElementById('answer'),
+                    jacketType: document.getElementById('jacket-type'),
+                    reasoning: document.getElementById('reasoning'),
+                    currentTemp: document.getElementById('current-temp'),
+                    laterTemp: document.getElementById('later-temp'),
+                    windSpeed: document.getElementById('wind-speed'),
+                    locationName: document.getElementById('location-name'),
+                    changeLocation: document.getElementById('change-location'),
+                    toggleUnits: document.getElementById('toggle-units')
+                };
+            },
+
+            bindEvents() {
+                this.elements.locationInput.addEventListener('input', (e) => this.handleInput(e));
+                this.elements.locationInput.addEventListener('keydown', (e) => this.handleKeydown(e));
+                this.elements.changeLocation.addEventListener('click', () => this.hideResult());
+                this.elements.toggleUnits.addEventListener('click', () => this.toggleUnits());
+
+                // Gender toggle
+                document.getElementById('gender-toggle').addEventListener('change', (e) => this.toggleGender(e.target.checked));
+
+                // Mute toggle
+                document.getElementById('mute-btn').addEventListener('click', () => this.toggleMute());
+
+                document.addEventListener('click', (e) => {
+                    if (!this.elements.locationInput.contains(e.target) &&
+                        !this.elements.suggestions.contains(e.target)) {
+                        this.hideSuggestions();
+                    }
+                });
+            },
+
+            toggleGender(isFemale) {
+                this.state.isMale = !isFemale;
+
+                // Update jacket images
+                const jackets = this.state.isMale ? this.maleJackets : this.femaleJackets;
+                const jacketItems = document.querySelectorAll('.jacket-item img');
+
+                jacketItems.forEach((img, index) => {
+                    if (index < jackets.length) {
+                        img.src = jackets[index];
+                    }
+                });
+            },
+
+            toggleMute() {
+                this.state.isMuted = !this.state.isMuted;
+                const btn = document.getElementById('mute-btn');
+                const btnTop = btn.querySelector('.button-top');
+
+                if (this.state.isMuted) {
+                    this.elements.music.pause();
+                    btnTop.textContent = '🔇';
+                } else {
+                    this.elements.music.play().catch(() => {});
+                    btnTop.textContent = '🔊';
+                }
+            },
+
+            initDraggable() {
+                const items = document.querySelectorAll('.jacket-item, .sticky-note');
+
+                items.forEach(item => {
+                    let isDragging = false;
+                    let startX, startY, initialX, initialY;
+
+                    item.addEventListener('mousedown', (e) => {
+                        isDragging = true;
+                        startX = e.clientX;
+                        startY = e.clientY;
+
+                        const rect = item.getBoundingClientRect();
+                        initialX = rect.left;
+                        initialY = rect.top;
+
+                        item.style.position = 'fixed';
+                        item.style.left = initialX + 'px';
+                        item.style.top = initialY + 'px';
+                        item.style.right = 'auto';
+                        item.style.bottom = 'auto';
+                    });
+
+                    document.addEventListener('mousemove', (e) => {
+                        if (!isDragging) return;
+
+                        const dx = e.clientX - startX;
+                        const dy = e.clientY - startY;
+
+                        item.style.left = (initialX + dx) + 'px';
+                        item.style.top = (initialY + dy) + 'px';
+                    });
+
+                    document.addEventListener('mouseup', () => {
+                        isDragging = false;
+                    });
+                });
+            },
+
+            handleInput(e) {
+                const query = e.target.value.trim();
+
+                if (this.state.searchTimeout) {
+                    clearTimeout(this.state.searchTimeout);
+                }
+
+                if (query.length < 2) {
+                    this.hideSuggestions();
+                    return;
+                }
+
+                this.state.searchTimeout = setTimeout(async () => {
+                    const locations = await WeatherAPI.searchLocations(query);
+                    this.state.suggestions = locations;
+                    this.state.selectedIndex = -1;
+                    this.renderSuggestions();
+                }, 300);
+            },
+
+            handleKeydown(e) {
+                const suggestions = this.state.suggestions;
+                if (suggestions.length === 0) return;
+
+                switch (e.key) {
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        this.state.selectedIndex = Math.min(this.state.selectedIndex + 1, suggestions.length - 1);
+                        this.renderSuggestions();
+                        break;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        this.state.selectedIndex = Math.max(this.state.selectedIndex - 1, -1);
+                        this.renderSuggestions();
+                        break;
+                    case 'Enter':
+                        e.preventDefault();
+                        if (this.state.selectedIndex >= 0) {
+                            this.selectLocation(suggestions[this.state.selectedIndex]);
+                        } else if (suggestions.length > 0) {
+                            this.selectLocation(suggestions[0]);
+                        }
+                        break;
+                    case 'Escape':
+                        this.hideSuggestions();
+                        break;
+                }
+            },
+
+            renderSuggestions() {
+                const suggestions = this.state.suggestions;
+                if (suggestions.length === 0) {
+                    this.hideSuggestions();
+                    return;
+                }
+
+                this.elements.suggestions.innerHTML = suggestions.map((loc, index) => {
+                    const detail = loc.state ? `${loc.state}, ${loc.country}` : loc.country;
+                    const selected = index === this.state.selectedIndex ? 'selected' : '';
+                    return `
+                        <li class="${selected}" data-index="${index}">
+                            <div class="location-name">${loc.name}</div>
+                            <div class="location-detail">${detail}</div>
+                        </li>
+                    `;
+                }).join('');
+
+                this.elements.suggestions.querySelectorAll('li').forEach(li => {
+                    li.addEventListener('click', () => {
+                        const index = parseInt(li.dataset.index);
+                        this.selectLocation(this.state.suggestions[index]);
+                    });
+                });
+
+                this.elements.suggestions.classList.remove('hidden');
+            },
+
+            async selectLocation(location) {
+                this.hideSuggestions();
+                this.elements.loading.classList.add('visible');
+
+                try {
+                    const weatherData = await WeatherAPI.getWeatherByCoords(location.lat, location.lon);
+                    weatherData.location.name = location.name;
+                    weatherData.location.country = location.state
+                        ? `${location.state}, ${location.country}`
+                        : location.country;
+                    this.state.weatherData = weatherData;
+                    this.showResult(weatherData);
+                } catch (error) {
+                    alert('Could not fetch weather data. Please try again.');
+                }
+
+                this.elements.loading.classList.remove('visible');
+            },
+
+            showResult(weatherData) {
+                const decision = JacketDecision.makeDecision(weatherData);
+
+                this.elements.answer.textContent = decision.answer;
+                this.elements.answer.className = 'answer ' + decision.answer.toLowerCase();
+                this.elements.jacketType.textContent = decision.jacketType || '';
+                this.elements.reasoning.textContent = decision.reasoning;
+                this.updateTemperatureDisplay(weatherData);
+                this.elements.windSpeed.textContent = `${weatherData.current.windSpeed} mph`;
+                this.elements.locationName.textContent = `${weatherData.location.name}, ${weatherData.location.country}`;
+
+                this.elements.result.classList.add('visible');
+            },
+
+            hideResult() {
+                this.elements.result.classList.remove('visible');
+                this.elements.locationInput.value = '';
+            },
+
+            updateTemperatureDisplay(weatherData) {
+                const { current, forecast } = weatherData || this.state.weatherData;
+                if (this.state.useCelsius) {
+                    this.elements.currentTemp.textContent = `${JacketDecision.toCelsius(current.temp)}°C`;
+                    this.elements.laterTemp.textContent = `${JacketDecision.toCelsius(forecast.sixHour.temp)}°C`;
+                } else {
+                    this.elements.currentTemp.textContent = `${current.temp}°F`;
+                    this.elements.laterTemp.textContent = `${forecast.sixHour.temp}°F`;
+                }
+            },
+
+            toggleUnits() {
+                this.state.useCelsius = !this.state.useCelsius;
+                this.elements.toggleUnits.textContent = this.state.useCelsius ? '°C' : '°F';
+                if (this.state.weatherData) {
+                    this.updateTemperatureDisplay();
+                }
+            },
+
+            hideSuggestions() {
+                this.elements.suggestions.classList.add('hidden');
+                this.state.selectedIndex = -1;
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            MoodboardApp.init();
+        });
+    </script>
 </body>
 </html>
