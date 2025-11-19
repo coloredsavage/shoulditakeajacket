@@ -1,0 +1,482 @@
+/* CSS Variables */
+:root {
+    --color-yes: #FF5252;
+    --color-yes-bg: #FFEBEE;
+    --color-maybe: #FFC107;
+    --color-maybe-bg: #FFF8E1;
+    --color-no: #4CAF50;
+    --color-no-bg: #E8F5E9;
+
+    --color-text: #000000;
+    --color-text-secondary: #666666;
+    --color-background: #FFFFFF;
+    --color-surface: #FFFFFF;
+    --color-border: #E0E0E0;
+
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Reset and Base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    min-height: 100vh;
+    padding: 40px 20px;
+    line-height: 1.5;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Hidden utility */
+.hidden {
+    display: none !important;
+}
+
+/* Header Typography */
+header {
+    margin-bottom: 50px;
+}
+
+header h1 {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 400;
+    color: var(--color-text);
+    margin-bottom: 0;
+    line-height: 1.1;
+}
+
+header h2 {
+    font-family: var(--font-display);
+    font-size: 6rem;
+    font-weight: 900;
+    color: var(--color-text);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+header .accent {
+    font-style: italic;
+    font-weight: 400;
+}
+
+/* States */
+.state {
+    padding: 20px 0;
+}
+
+/* Loading State */
+#loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    gap: 20px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-text);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Carousel */
+.carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 40px 0;
+    padding: 0 60px;
+}
+
+.carousel-track {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.carousel-item {
+    flex: 0 0 auto;
+    height: 320px;
+    width: auto;
+    max-width: 280px;
+    object-fit: contain;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.carousel-item:first-child,
+.carousel-item:last-child {
+    opacity: 0.4;
+    transform: scale(0.8);
+}
+
+.carousel-item:nth-child(2) {
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--color-text);
+    cursor: pointer;
+    padding: 10px;
+    transition: opacity 0.2s;
+    z-index: 20;
+}
+
+.carousel-btn:hover {
+    opacity: 0.6;
+}
+
+.carousel-btn.prev {
+    left: 0;
+}
+
+.carousel-btn.next {
+    right: 0;
+}
+
+/* Location Input Section */
+.location-input-section {
+    margin-top: 40px;
+}
+
+.input-label {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.input-wrapper {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 18px 24px;
+    border: 2px solid var(--color-text);
+    border-radius: 0;
+    font-size: 1.125rem;
+    font-family: var(--font-body);
+    text-align: center;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: var(--color-text);
+}
+
+.input-wrapper input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+/* Autocomplete suggestions */
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    border: 2px solid var(--color-text);
+    border-top: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.suggestions li {
+    padding: 12px 16px;
+    cursor: pointer;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.suggestions li:last-child {
+    border-bottom: none;
+}
+
+.suggestions li:hover,
+.suggestions li.selected {
+    background: #f5f5f5;
+}
+
+.suggestions .location-name {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.suggestions .location-detail {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+/* Answer Section */
+.answer-section {
+    margin: 30px 0;
+}
+
+.answer {
+    font-family: var(--font-display);
+    font-size: 8rem;
+    font-weight: 900;
+    line-height: 1;
+    padding: 20px;
+    display: inline-block;
+}
+
+.answer.yes {
+    color: var(--color-yes);
+}
+
+.answer.maybe {
+    color: #F57C00;
+}
+
+.answer.no {
+    color: var(--color-no);
+}
+
+.jacket-type {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-top: 10px;
+}
+
+/* Result Carousel */
+.result-carousel {
+    margin: 30px 0;
+}
+
+.result-carousel .carousel-item {
+    height: 180px;
+}
+
+/* Weather Details */
+.details {
+    margin: 30px 0;
+}
+
+.reasoning {
+    font-size: 1.125rem;
+    color: var(--color-text);
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.weather-info {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 15px;
+}
+
+.weather-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.weather-item .label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.weather-item .value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.location-name {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--color-text);
+    color: white;
+    border: 2px solid var(--color-text);
+}
+
+.btn-primary:hover {
+    background-color: transparent;
+    color: var(--color-text);
+}
+
+.btn-link {
+    background: none;
+    color: var(--color-text-secondary);
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    text-decoration: underline;
+}
+
+.btn-link:hover {
+    color: var(--color-text);
+}
+
+.btn-icon {
+    background: none;
+    color: var(--color-text-secondary);
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    font-size: 0.875rem;
+}
+
+.btn-icon:hover {
+    background: #f5f5f5;
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-credit {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.footer-credit a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.footer-credit a:hover {
+    text-decoration: underline;
+}
+
+/* Error State */
+#error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px;
+}
+
+#error-message {
+    color: var(--color-yes);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    header h2 {
+        font-size: 3.5rem;
+    }
+
+    .answer {
+        font-size: 5rem;
+    }
+
+    .carousel {
+        padding: 0 40px;
+    }
+
+    .carousel-item {
+        height: 220px;
+        max-width: 180px;
+    }
+
+    .carousel-item:nth-child(2) {
+        transform: scale(1);
+    }
+
+    .weather-info {
+        gap: 20px;
+    }
+
+    .carousel-btn {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    header h2 {
+        font-size: 2.5rem;
+    }
+
+    .answer {
+        font-size: 4rem;
+    }
+
+    .carousel-item {
+        height: 180px;
+    }
+}
+
+/* Animation for answer appearance */
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.answer {
+    animation: popIn 0.4s ease-out;
+}

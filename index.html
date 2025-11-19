@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Should I Bring a Jacket?</title>
+    <meta name="description" content="Find out if you need a jacket based on your local weather conditions">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Loading State -->
+        <div id="loading" class="state hidden">
+            <div class="spinner"></div>
+            <p>Checking weather...</p>
+        </div>
+
+        <!-- Permission Request State -->
+        <div id="permission" class="state">
+            <header>
+                <h1>Should I bring a</h1>
+                <h2>JACKET<span class="accent">?</span></h2>
+            </header>
+
+            <div class="carousel">
+                <button class="carousel-btn prev" id="carousel-prev">&lt;</button>
+                <div class="carousel-track" id="carousel-track">
+                    <img src="jackets/1bca19114c14bcc98f4d6e15e879d6f7.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/6f89fcf7a3acf73e976ddb0e29f86698.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/8bb74e4411d327f49d62dd4efab8fb74.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/9f0ac0679bc4a36419f25868b59c48f7.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/4210e5adb19db9dd0b7d0039603edd7a.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/eb7e044be40bb0d586e859627d538b35.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/cbba208285dffd2384a4cf4bd9706abc.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/b969bba3af3c94b29409049c2fed717b.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/b866ccaf4f2a77886b31bd7124fbecfc.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/7081de40f5b0251b49c8acd187786162.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/4855cab737ab8365b67fb364289eba1b.png" alt="Jacket" class="carousel-item">
+                </div>
+                <button class="carousel-btn next" id="carousel-next">&gt;</button>
+            </div>
+
+            <div class="location-input-section">
+                <p class="input-label">Enter your location</p>
+                <div class="input-wrapper">
+                    <input type="text" id="location-input" placeholder="City name or ZIP code" autocomplete="off">
+                    <ul id="location-suggestions" class="suggestions hidden"></ul>
+                </div>
+                <button id="allow-location" class="btn btn-link">or use my current location</button>
+            </div>
+        </div>
+
+        <!-- Result State -->
+        <div id="result" class="state hidden">
+            <header>
+                <h1 id="answer-text">Should you bring a</h1>
+                <h2 id="answer-display">JACKET<span class="accent">?</span></h2>
+            </header>
+
+            <div class="answer-section">
+                <div id="answer" class="answer">YES</div>
+                <p id="jacket-type" class="jacket-type"></p>
+            </div>
+
+            <div class="carousel result-carousel">
+                <button class="carousel-btn prev" id="result-carousel-prev">&lt;</button>
+                <div class="carousel-track" id="result-carousel-track">
+                    <img src="jackets/1bca19114c14bcc98f4d6e15e879d6f7.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/6f89fcf7a3acf73e976ddb0e29f86698.png" alt="Jacket" class="carousel-item">
+                    <img src="jackets/8bb74e4411d327f49d62dd4efab8fb74.png" alt="Jacket" class="carousel-item">
+                </div>
+                <button class="carousel-btn next" id="result-carousel-next">&gt;</button>
+            </div>
+
+            <div class="details">
+                <p id="reasoning" class="reasoning"></p>
+                <div class="weather-info">
+                    <div class="weather-item">
+                        <span class="label">Now</span>
+                        <span id="current-temp" class="value">--°</span>
+                    </div>
+                    <div class="weather-item">
+                        <span class="label">Later</span>
+                        <span id="later-temp" class="value">--°</span>
+                    </div>
+                    <div class="weather-item">
+                        <span class="label">Wind</span>
+                        <span id="wind-speed" class="value">-- mph</span>
+                    </div>
+                </div>
+                <p id="location-name" class="location-name"></p>
+            </div>
+
+            <button id="change-location" class="btn btn-link">Change location</button>
+        </div>
+
+        <!-- Error State -->
+        <div id="error" class="state hidden">
+            <header>
+                <h1>Oops</h1>
+                <h2>SOMETHING WENT WRONG<span class="accent">!</span></h2>
+            </header>
+            <p id="error-message">Could not fetch weather data</p>
+            <button id="retry" class="btn btn-primary">Try Again</button>
+        </div>
+
+        <footer>
+            <button id="toggle-units" class="btn btn-icon" title="Toggle °F/°C">°F</button>
+            <p class="footer-credit">
+                built on a tuesday night by <a href="https://x.com/colored_savage" target="_blank">savage</a> with support from <a href="https://x.com/heyohelen" target="_blank">helen</a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="js/weather.js"></script>
+    <script src="js/decision.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
