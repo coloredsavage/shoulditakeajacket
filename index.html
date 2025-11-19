@@ -990,6 +990,9 @@
                 this.hideSuggestions();
                 this.elements.loading.classList.add('visible');
 
+                // Clear cache to get fresh data for new location
+                WeatherAPI.clearCache();
+
                 try {
                     const weatherData = await WeatherAPI.getWeatherByCoords(location.lat, location.lon);
                     weatherData.location.name = location.name;
