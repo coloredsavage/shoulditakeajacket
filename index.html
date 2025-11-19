@@ -725,14 +725,13 @@
                 </div>
                 <p id="location-name" style="color: #666; font-size: 0.875rem;"></p>
                 <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-                    <button id="result-toggle-units" class="btn-icon" title="Toggle °F/°C">°F</button>
+                    <button id="result-toggle-units" class="btn" style="padding: 10px 16px;" title="Toggle °F/°C">°F</button>
                     <button class="btn" id="change-location">Check another location</button>
                 </div>
             </div>
         </div>
 
         <div class="footer">
-            <button id="toggle-units" class="btn-icon" title="Toggle °F/°C">°F</button>
             <p class="footer-credit">
                 built by <a href="https://x.com/colored_savage" target="_blank">savage</a> and <a href="https://x.com/heyohelen" target="_blank">helen</a>
             </p>
@@ -820,8 +819,7 @@
                     laterTemp: document.getElementById('later-temp'),
                     windSpeed: document.getElementById('wind-speed'),
                     locationName: document.getElementById('location-name'),
-                    changeLocation: document.getElementById('change-location'),
-                    toggleUnits: document.getElementById('toggle-units')
+                    changeLocation: document.getElementById('change-location')
                 };
             },
 
@@ -829,7 +827,6 @@
                 this.elements.locationInput.addEventListener('input', (e) => this.handleInput(e));
                 this.elements.locationInput.addEventListener('keydown', (e) => this.handleKeydown(e));
                 this.elements.changeLocation.addEventListener('click', () => this.hideResult());
-                this.elements.toggleUnits.addEventListener('click', () => this.toggleUnits());
 
                 // Result screen toggle
                 document.getElementById('result-toggle-units').addEventListener('click', () => this.toggleUnits());
@@ -1047,7 +1044,6 @@
             toggleUnits() {
                 this.state.useCelsius = !this.state.useCelsius;
                 const unitText = this.state.useCelsius ? '°C' : '°F';
-                this.elements.toggleUnits.textContent = unitText;
                 document.getElementById('result-toggle-units').textContent = unitText;
                 if (this.state.weatherData) {
                     this.updateTemperatureDisplay();
