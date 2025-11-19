@@ -724,7 +724,10 @@
                     </div>
                 </div>
                 <p id="location-name" style="color: #666; font-size: 0.875rem;"></p>
-                <button class="btn" id="change-location">Check another location</button>
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                    <button id="result-toggle-units" class="btn-icon" title="Toggle °F/°C">°F</button>
+                    <button class="btn" id="change-location">Check another location</button>
+                </div>
             </div>
         </div>
 
@@ -770,17 +773,17 @@
             ],
 
             femaleJackets: [
-                'female-jackets/fd1a3d0e1819193a534c756d9f8fd97f.png',
-                'female-jackets/de455f6ad1bf9385f3eb18c50b2006c8.png',
-                'female-jackets/c758e1955b6ef58c4c6a52af952ccdf0.png',
-                'female-jackets/adc6dbf7475b2102446a9c771ecbe23d.png',
-                'female-jackets/a1a66aa64338edabbff91cd9dfb0f3ae.png',
-                'female-jackets/875ebfb0a264ce780bcfbdc0f36e02bc.png',
-                'female-jackets/83aa03d9b143f67a3b13f94a4b98ac3a.png',
-                'female-jackets/642e34e858d9918b1b58ac39f290c23e.png',
+                'female-jackets/21f6b7709222770e2b0eedd79fa1c13c.png',
+                'female-jackets/25ec5a85e1277307df24fba42056e7e0.png',
+                'female-jackets/337a2fd7a2a36a75ae264e029a4af4cf.png',
                 'female-jackets/434e838433611705838bd4a77a6da09f.png',
-                'female-jackets/2c92d92ee1fa7a3aa2e32496eca16ff2.png',
-                'female-jackets/21f6b7709222770e2b0eedd79fa1c13c.png'
+                'female-jackets/4d9b745d6bbca60f26f646602dad6043.png',
+                'female-jackets/50dadb183e061a20a137bbadd3e3fd49 (1).png',
+                'female-jackets/642e34e858d9918b1b58ac39f290c23e.png',
+                'female-jackets/875ebfb0a264ce780bcfbdc0f36e02bc.png',
+                'female-jackets/92c226e30acdcb619a99c45ce9e465ac.png',
+                'female-jackets/a1e8b3d608dbd20563676ebde76e0479.png',
+                'female-jackets/c758e1955b6ef58c4c6a52af952ccdf0.png'
             ],
 
             elements: {},
@@ -827,6 +830,9 @@
                 this.elements.locationInput.addEventListener('keydown', (e) => this.handleKeydown(e));
                 this.elements.changeLocation.addEventListener('click', () => this.hideResult());
                 this.elements.toggleUnits.addEventListener('click', () => this.toggleUnits());
+
+                // Result screen toggle
+                document.getElementById('result-toggle-units').addEventListener('click', () => this.toggleUnits());
 
                 // Gender toggle
                 document.getElementById('gender-toggle').addEventListener('change', (e) => this.toggleGender(e.target.checked));
@@ -1040,7 +1046,9 @@
 
             toggleUnits() {
                 this.state.useCelsius = !this.state.useCelsius;
-                this.elements.toggleUnits.textContent = this.state.useCelsius ? '°C' : '°F';
+                const unitText = this.state.useCelsius ? '°C' : '°F';
+                this.elements.toggleUnits.textContent = unitText;
+                document.getElementById('result-toggle-units').textContent = unitText;
                 if (this.state.weatherData) {
                     this.updateTemperatureDisplay();
                 }
