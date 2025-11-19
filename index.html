@@ -501,83 +501,10 @@
             box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.75), inset 0 2px 2px rgba(0, 0, 0, 0.25);
         }
 
-        /* Edit mode button */
-        .edit-mode-btn {
-            display: none;
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #333;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            cursor: pointer;
-            z-index: 500;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        .edit-mode-btn.active {
-            background: #FF5252;
-        }
-
-        .jacket-item.selected {
-            outline: 3px solid #FF5252;
-            outline-offset: 5px;
-        }
-
-        .jacket-item.edit-mode {
-            cursor: pointer;
-        }
-
-        /* Scale controls */
-        .scale-controls {
-            display: none;
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            border-radius: 25px;
-            padding: 8px 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-            z-index: 500;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .scale-controls.visible {
-            display: flex;
-        }
-
-        .scale-btn {
-            background: #333;
-            color: white;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .scale-btn:active {
-            background: #555;
-        }
-
         /* Mobile Responsive */
         @media (max-width: 768px) {
             body {
                 overflow-y: auto;
-            }
-
-            .edit-mode-btn {
-                display: block;
             }
 
             .jacket-item {
@@ -624,6 +551,18 @@
             .input-note input {
                 width: 100%;
                 max-width: 280px;
+            }
+
+            .input-note {
+                position: relative;
+            }
+
+            .suggestions {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 280px;
+                max-width: 100%;
             }
 
             .footer {
@@ -799,13 +738,6 @@
         <audio id="bg-music" loop>
             <source src="music/background.mp3" type="audio/mpeg">
         </audio>
-
-        <!-- Mobile edit mode controls -->
-        <button class="edit-mode-btn" id="edit-mode-btn">Edit</button>
-        <div class="scale-controls" id="scale-controls">
-            <button class="scale-btn" id="scale-down">−</button>
-            <button class="scale-btn" id="scale-up">+</button>
-        </div>
     </div>
 
     <script src="js/weather.js"></script>
@@ -820,10 +752,7 @@
                 selectedIndex: -1,
                 searchTimeout: null,
                 isMale: true,
-                isMuted: true,
-                editMode: false,
-                selectedJacket: null,
-                jacketScales: {}
+                isMuted: true
             },
 
             maleJackets: [
@@ -861,7 +790,6 @@
                 this.bindEvents();
                 this.initDraggable();
                 this.initAudio();
-                this.initMobileEdit();
             },
 
             initAudio() {
@@ -979,125 +907,6 @@
                         isDragging = false;
                     });
                 });
-            },
-
-            initMobileEdit() {
-                const editBtn = document.getElementById('edit-mode-btn');
-                const scaleControls = document.getElementById('scale-controls');
-                const scaleUp = document.getElementById('scale-up');
-                const scaleDown = document.getElementById('scale-down');
-                const items = document.querySelectorAll('.jacket-item');
-
-                // Toggle edit mode
-                editBtn.addEventListener('click', () => {
-                    this.state.editMode = !this.state.editMode;
-                    editBtn.classList.toggle('active', this.state.editMode);
-                    editBtn.textContent = this.state.editMode ? 'Done' : 'Edit';
-
-                    items.forEach(item => {
-                        item.classList.toggle('edit-mode', this.state.editMode);
-                    });
-
-                    if (!this.state.editMode) {
-                        this.deselectJacket();
-                    }
-                });
-
-                // Tap to select jacket
-                items.forEach((item, index) => {
-                    item.addEventListener('click', (e) => {
-                        if (!this.state.editMode) return;
-                        e.stopPropagation();
-                        this.selectJacket(item, index);
-                    });
-
-                    // Touch drag for mobile
-                    let touchStartX, touchStartY, initialX, initialY;
-
-                    item.addEventListener('touchstart', (e) => {
-                        if (!this.state.editMode || !item.classList.contains('selected')) return;
-
-                        const touch = e.touches[0];
-                        touchStartX = touch.clientX;
-                        touchStartY = touch.clientY;
-
-                        const rect = item.getBoundingClientRect();
-                        initialX = rect.left;
-                        initialY = rect.top;
-
-                        item.style.position = 'fixed';
-                        item.style.left = initialX + 'px';
-                        item.style.top = initialY + 'px';
-                        item.style.right = 'auto';
-                        item.style.bottom = 'auto';
-                    }, { passive: true });
-
-                    item.addEventListener('touchmove', (e) => {
-                        if (!this.state.editMode || !item.classList.contains('selected')) return;
-
-                        const touch = e.touches[0];
-                        const dx = touch.clientX - touchStartX;
-                        const dy = touch.clientY - touchStartY;
-
-                        item.style.left = (initialX + dx) + 'px';
-                        item.style.top = (initialY + dy) + 'px';
-                    }, { passive: true });
-                });
-
-                // Scale controls
-                scaleUp.addEventListener('click', () => {
-                    if (this.state.selectedJacket !== null) {
-                        this.scaleJacket(1.1);
-                    }
-                });
-
-                scaleDown.addEventListener('click', () => {
-                    if (this.state.selectedJacket !== null) {
-                        this.scaleJacket(0.9);
-                    }
-                });
-
-                // Deselect when clicking outside
-                document.addEventListener('click', (e) => {
-                    if (this.state.editMode &&
-                        !e.target.closest('.jacket-item') &&
-                        !e.target.closest('.scale-controls') &&
-                        !e.target.closest('.edit-mode-btn')) {
-                        this.deselectJacket();
-                    }
-                });
-            },
-
-            selectJacket(item, index) {
-                // Deselect previous
-                document.querySelectorAll('.jacket-item.selected').forEach(el => {
-                    el.classList.remove('selected');
-                });
-
-                item.classList.add('selected');
-                this.state.selectedJacket = index;
-                document.getElementById('scale-controls').classList.add('visible');
-            },
-
-            deselectJacket() {
-                document.querySelectorAll('.jacket-item.selected').forEach(el => {
-                    el.classList.remove('selected');
-                });
-                this.state.selectedJacket = null;
-                document.getElementById('scale-controls').classList.remove('visible');
-            },
-
-            scaleJacket(factor) {
-                const items = document.querySelectorAll('.jacket-item');
-                const item = items[this.state.selectedJacket];
-                if (!item) return;
-
-                const img = item.querySelector('img');
-                const currentScale = this.state.jacketScales[this.state.selectedJacket] || 1;
-                const newScale = Math.max(0.5, Math.min(2, currentScale * factor));
-
-                this.state.jacketScales[this.state.selectedJacket] = newScale;
-                img.style.transform = `scale(${newScale})`;
             },
 
             handleInput(e) {
