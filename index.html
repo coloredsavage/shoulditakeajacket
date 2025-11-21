@@ -767,6 +767,7 @@
                 <div id="answer" class="answer">YES</div>
                 <p id="jacket-type" class="jacket-type"></p>
                 <p id="reasoning" class="reasoning"></p>
+                <p id="rain-advice" class="rain-advice" style="color: #0066cc; font-size: 1rem; margin-top: 10px;"></p>
                 <div class="weather-info">
                     <div class="weather-item">
                         <span class="label">Now</span>
@@ -873,6 +874,7 @@
                     answer: document.getElementById('answer'),
                     jacketType: document.getElementById('jacket-type'),
                     reasoning: document.getElementById('reasoning'),
+                    rainAdvice: document.getElementById('rain-advice'),
                     currentTemp: document.getElementById('current-temp'),
                     laterTemp: document.getElementById('later-temp'),
                     windSpeed: document.getElementById('wind-speed'),
@@ -1076,6 +1078,7 @@
                 this.elements.answer.className = 'answer ' + decision.answer.toLowerCase();
                 this.elements.jacketType.textContent = decision.jacketType || '';
                 this.elements.reasoning.textContent = decision.reasoning;
+                this.elements.rainAdvice.textContent = decision.rainAdvice || '';
                 this.updateTemperatureDisplay(weatherData);
                 this.elements.windSpeed.textContent = `${weatherData.current.windSpeed} mph`;
                 this.elements.locationName.textContent = `${weatherData.location.name}, ${weatherData.location.country}`;
