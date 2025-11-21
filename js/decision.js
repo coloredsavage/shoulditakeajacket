@@ -4,17 +4,13 @@
  */
 
 const JacketDecision = {
-    // Temperature thresholds (Fahrenheit)
+    // Temperature thresholds (Fahrenheit) - Primary jacket decision factors
     THRESHOLDS: {
-        DEFINITELY_YES: 55,      // Below this = definitely bring a jacket
-        PROBABLY_YES: 65,        // Below this = probably bring a jacket
-        MAYBE: 70,               // Below this = maybe bring a jacket
-        // Above MAYBE = probably fine without
-
-        HEAVY_JACKET: 45,        // Below this = heavy jacket
-        MEDIUM_JACKET: 60,       // Below this = medium jacket
-        // Above MEDIUM = light jacket
-
+        NO_JACKET: 75,           // Above this = no jacket needed
+        LIGHT_JACKET: 60,        // 60-75°F = light jacket/sweater
+        MEDIUM_JACKET: 45,       // 45-60°F = medium jacket
+        HEAVY_JACKET: 45,        // Below this = heavy jacket/coat
+        
         TEMP_DROP_SIGNIFICANT: 10,  // Degrees drop that triggers recommendation
         WIND_CHILL_FACTOR: 5,       // Wind speed that significantly affects comfort
         HIGH_WIND: 15               // Wind speed that definitely needs a jacket
@@ -22,7 +18,7 @@ const JacketDecision = {
 
     /**
      * Main decision function
-     * Returns: { answer: 'YES'|'NO'|'MAYBE', reasoning: string, jacketType: string|null }
+     * Returns: { answer: 'YES'|'NO', reasoning: string, jacketType: string|null, rainAdvice: string|null }
      */
     makeDecision(weatherData) {
         const { current, forecast, precipitation } = weatherData;
@@ -38,10 +34,12 @@ const JacketDecision = {
         // Calculate temperature drop
         const tempDrop = current.temp - forecast.sixHour.temp;
 
-        // Build decision factors
+        // Build decision factors - temperature-based only for main decision
         const factors = {
-            isCold: effectiveTemp < this.THRESHOLDS.PROBABLY_YES,
-            isCoolish: effectiveTemp < this.THRESHOLDS.MAYBE,
+            isVeryCold: effectiveTemp < this.THRESHOLDS.HEAVY_JACKET,
+            isCold: effectiveTemp < this.THRESHOLDS.MEDIUM_JACKET,
+            isCool: effectiveTemp < this.THRESHOLDS.LIGHT_JACKET,
+            isWarm: effectiveTemp >= this.THRESHOLDS.NO_JACKET,
             significantDrop: tempDrop >= this.THRESHOLDS.TEMP_DROP_SIGNIFICANT,
             isRainy: precipitation.isRaining || precipitation.chance > 50,
             isWindy: current.windSpeed >= this.THRESHOLDS.HIGH_WIND,
@@ -50,43 +48,48 @@ const JacketDecision = {
             willGetColder: forecast.sixHour.temp < current.temp - 5
         };
 
-        // Determine answer
-        let answer, reasoning, jacketType;
+        // Determine answer based primarily on temperature (binary YES/NO)
+        let answer, reasoning, jacketType, rainAdvice = null;
 
-        // Definite YES conditions
-        if (effectiveTemp < this.THRESHOLDS.DEFINITELY_YES) {
+        // Primary jacket decision based on temperature
+        if (factors.isVeryCold) {
             answer = 'YES';
-            reasoning = this.buildReasoning(current, forecast, factors, 'cold');
-            jacketType = this.recommendJacketType(effectiveTemp, factors);
+            jacketType = 'Heavy jacket or coat';
+            reasoning = this.buildTemperatureReasoning(current, forecast, factors, 'very-cold');
         }
-        // YES conditions
-        else if (factors.isCold || factors.isRainy ||
-                 (factors.significantDrop && factors.willGetColder) ||
-                 (factors.isWindy && effectiveTemp < this.THRESHOLDS.MAYBE)) {
+        else if (factors.isCold) {
             answer = 'YES';
-            reasoning = this.buildReasoning(current, forecast, factors, 'yes');
-            jacketType = this.recommendJacketType(effectiveTemp, factors);
+            jacketType = 'Medium jacket';
+            reasoning = this.buildTemperatureReasoning(current, forecast, factors, 'cold');
         }
-        // MAYBE conditions
-        else if (factors.isCoolish ||
-                 (factors.isEvening && current.temp < 75) ||
-                 (factors.significantDrop) ||
-                 (precipitation.chance > 30)) {
-            answer = 'MAYBE';
-            reasoning = this.buildReasoning(current, forecast, factors, 'maybe');
-            jacketType = this.recommendJacketType(effectiveTemp, factors);
+        else if (factors.isCool) {
+            answer = 'YES';
+            jacketType = 'Light jacket or sweater';
+            reasoning = this.buildTemperatureReasoning(current, forecast, factors, 'cool');
         }
-        // NO - you're fine
         else {
+            // Above 60°F = NO jacket needed
             answer = 'NO';
-            reasoning = this.buildReasoning(current, forecast, factors, 'no');
             jacketType = null;
+            reasoning = this.buildTemperatureReasoning(current, forecast, factors, 'warm');
+        }
+
+        // Add rain advice as supplementary information
+        if (factors.isRainy) {
+            if (factors.isVeryCold || factors.isCold) {
+                rainAdvice = 'Rain expected - consider waterproof jacket';
+            } else if (factors.isCool) {
+                rainAdvice = 'Rain expected - light rain gear recommended';
+            } else {
+                rainAdvice = 'Rain expected - no jacket needed for warmth, but consider rain gear';
+            }
         }
 
         return {
             answer,
             reasoning,
             jacketType,
+            rainAdvice,
             factors // Include for debugging/transparency
         };
     },
@@ -105,26 +108,13 @@ const JacketDecision = {
     },
 
     /**
-     * Recommend jacket type based on conditions
+     * Build temperature-based reasoning messages
      */
-    recommendJacketType(effectiveTemp, factors) {
-        if (effectiveTemp < this.THRESHOLDS.HEAVY_JACKET || factors.isRainy) {
-            return 'Heavy jacket or coat';
-        } else if (effectiveTemp < this.THRESHOLDS.MEDIUM_JACKET) {
-            return 'Medium jacket';
-        } else {
-            return 'Light jacket';
-        }
-    },
-
-    /**
-     * Build human-readable reasoning
-     */
-    buildReasoning(current, forecast, factors, type) {
+    buildTemperatureReasoning(current, forecast, factors, type) {
         const parts = [];
 
         switch (type) {
-            case 'cold':
+            case 'very-cold':
                 parts.push(`It's ${current.temp}°F`);
                 if (factors.isWindy) {
                     parts.push(`and windy (${current.windSpeed} mph)`);
@@ -134,33 +124,28 @@ const JacketDecision = {
                 }
                 break;
 
-            case 'yes':
-                if (factors.isCold) {
-                    parts.push(`It's ${current.temp}°F`);
-                } else if (factors.isRainy) {
-                    parts.push(`Rain is expected`);
-                    if (current.temp < 70) {
-                        parts.push(`and it's ${current.temp}°F`);
-                    }
-                } else if (factors.significantDrop) {
-                    parts.push(`Currently ${current.temp}°F but dropping to ${forecast.sixHour.temp}°F`);
-                } else if (factors.isWindy) {
-                    parts.push(`Windy conditions (${current.windSpeed} mph) at ${current.temp}°F`);
+            case 'cold':
+                parts.push(`It's ${current.temp}°F`);
+                if (factors.isWindy) {
+                    parts.push(`and breezy (${current.windSpeed} mph)`);
+                }
+                if (factors.willGetColder) {
+                    parts.push(`dropping to ${forecast.sixHour.temp}°F later`);
                 }
                 break;
 
-            case 'maybe':
-                if (factors.isCoolish) {
-                    parts.push(`It's a mild ${current.temp}°F`);
+            case 'cool':
+                parts.push(`It's a cool ${current.temp}°F`);
+                if (factors.isWindy) {
+                    parts.push(`with some wind (${current.windSpeed} mph)`);
                 }
-                if (factors.isEvening) {
-                    parts.push(`Evening temperatures can get chilly`);
-                } else if (factors.significantDrop) {
-                    parts.push(`Temperature dropping from ${current.temp}°F to ${forecast.sixHour.temp}°F`);
+                if (factors.willGetColder) {
+                    parts.push(`getting cooler later`);
                 }
                 break;
 
-            case 'no':
+
+            case 'warm':
                 parts.push(`It's ${current.temp}°F and comfortable`);
                 if (!factors.willGetColder) {
                     parts.push(`staying warm through the day`);
