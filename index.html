@@ -29,8 +29,8 @@
     <meta property="twitter:creator" content="@colored_savage">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="jackets/1bca19114c14bcc98f4d6e15e879d6f7.png">
-    <link rel="apple-touch-icon" href="jackets/1bca19114c14bcc98f4d6e15e879d6f7.png">
+    <link rel="icon" type="image/png" href="jackets/Blousson Black Wool Jacket.png">
+    <link rel="apple-touch-icon" href="jackets/Blousson Black Wool Jacket.png">
 
     <!-- Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -104,7 +104,7 @@
         }
 
         /* Draggable jackets */
-        .jacket-item {
+        .jacket-container {
             position: absolute;
             cursor: grab;
             user-select: none;
@@ -112,20 +112,83 @@
             z-index: 1;
         }
 
-        .jacket-item:active {
+        .jacket-container:active {
             cursor: grabbing;
             z-index: 100;
         }
 
-        .jacket-item:hover {
+        .jacket-container:hover {
             z-index: 50;
         }
 
-        .jacket-item img {
+        .jacket-container img {
             max-width: 350px;
             height: auto;
             filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.1));
             pointer-events: none;
+        }
+
+        /* Tooltip styling */
+        .jacket-tooltip {
+            position: absolute;
+            bottom: -40px; /* Position below jacket */
+            left: 50%;
+            transform: translateX(-50%);
+            
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            
+            font-size: 13px;
+            white-space: nowrap;
+            pointer-events: none; /* Don't interfere with dragging */
+            
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        /* Show tooltip on hover */
+        .jacket-container:hover .jacket-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px); /* Slight upward motion */
+        }
+
+        /* Brand name styling */
+        .jacket-brand {
+            font-weight: 600;
+            display: block;
+        }
+
+        .jacket-model {
+            font-size: 11px;
+            opacity: 0.8;
+            display: block;
+        }
+
+        /* Arrow pointer */
+        .jacket-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid rgba(0, 0, 0, 0.85);
+        }
+
+        /* Mobile: Show on tap/touch */
+        @media (hover: none) {
+            .jacket-container.touched .jacket-tooltip {
+                opacity: 1;
+                transform: translateX(-50%) translateY(-5px);
+            }
         }
 
         /* Center content */
@@ -565,15 +628,15 @@
                 overflow-y: auto;
             }
 
-            .jacket-item {
+            .jacket-container {
                 display: none;
             }
 
-            .jacket-item:nth-child(-n+4) {
+            .jacket-container:nth-child(-n+4) {
                 display: block;
             }
 
-            .jacket-item img {
+            .jacket-container img {
                 max-width: 150px;
             }
 
@@ -684,48 +747,190 @@
     <div class="container">
         <!-- Draggable jackets scattered around avoiding center -->
         <!-- Top-left area -->
-        <div class="jacket-item" style="top: 5%; left: 8%; transform: rotate(-5deg);">
-            <img src="jackets/1bca19114c14bcc98f4d6e15e879d6f7.png" alt="Brown leather jacket for cold weather">
+        <div class="jacket-container" style="top: 5%; left: 8%; transform: rotate(-5deg);">
+            <img src="jackets/Aimé Leon Dore x Porsche 911SC Mechanic Jacket.png" alt="Aimé Leon Dore Porsche 911SC Mechanic Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Aimé Leon Dore</span>
+                <span class="jacket-model">Porsche 911SC Mechanic Jacket</span>
+            </div>
         </div>
         <!-- Top-right area -->
-        <div class="jacket-item" style="top: 8%; right: 5%; transform: rotate(3deg);">
-            <img src="jackets/6f89fcf7a3acf73e976ddb0e29f86698.png" alt="Black winter jacket with hood">
+        <div class="jacket-container" style="top: 8%; right: 5%; transform: rotate(3deg);">
+            <img src="jackets/Alpha Industries Leather Flight Jacket.png" alt="Alpha Industries Leather Flight Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Alpha Industries</span>
+                <span class="jacket-model">Leather Flight Jacket</span>
+            </div>
         </div>
         <!-- Bottom-left area -->
-        <div class="jacket-item" style="bottom: 12%; left: 5%; transform: rotate(8deg);">
-            <img src="jackets/8bb74e4411d327f49d62dd4efab8fb74.png" alt="Navy blue quilted jacket">
+        <div class="jacket-container" style="bottom: 12%; left: 5%; transform: rotate(8deg);">
+            <img src="jackets/Ben Davis Work Jacket Stripped.png" alt="Ben Davis Work Jacket Stripped" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Ben Davis</span>
+                <span class="jacket-model">Work Jacket Stripped</span>
+            </div>
         </div>
         <!-- Bottom-right area -->
-        <div class="jacket-item" style="bottom: 8%; right: 10%; transform: rotate(-4deg);">
-            <img src="jackets/9f0ac0679bc4a36419f25868b59c48f7.png" alt="Olive green utility jacket">
+        <div class="jacket-container" style="bottom: 8%; right: 10%; transform: rotate(-4deg);">
+            <img src="jackets/Blousson Black Wool Jacket.png" alt="Blousson Black Wool Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Blousson</span>
+                <span class="jacket-model">Black Wool</span>
+            </div>
         </div>
         <!-- Left side - upper -->
-        <div class="jacket-item" style="top: 22%; left: 3%; transform: rotate(-3deg);">
-            <img src="jackets/4210e5adb19db9dd0b7d0039603edd7a.png" alt="Tan windbreaker jacket">
+        <div class="jacket-container" style="top: 22%; left: 3%; transform: rotate(-3deg);">
+            <img src="jackets/Carhartt WIP Detroit jacket.png" alt="Carhartt WIP Detroit Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Carhartt WIP</span>
+                <span class="jacket-model">Detroit Jacket</span>
+            </div>
         </div>
         <!-- Right side - upper -->
-        <div class="jacket-item" style="top: 18%; right: 2%; transform: rotate(6deg);">
-            <img src="jackets/eb7e044be40bb0d586e859627d538b35.png" alt="Gray fleece jacket">
+        <div class="jacket-container" style="top: 18%; right: 2%; transform: rotate(6deg);">
+            <img src="jackets/Days Ranger navy blue whipcord work jacket. .png" alt="Days Ranger Navy Blue Whipcord Work Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Days Ranger</span>
+                <span class="jacket-model">Navy Blue Whipcord Work Jacket</span>
+            </div>
         </div>
         <!-- Left side - lower -->
-        <div class="jacket-item" style="bottom: 25%; left: 6%; transform: rotate(2deg);">
-            <img src="jackets/cbba208285dffd2384a4cf4bd9706abc.png" alt="Red rain jacket for wet weather">
+        <div class="jacket-container" style="bottom: 25%; left: 6%; transform: rotate(2deg);">
+            <img src="jackets/KNOX Blue Navy Jacket.png" alt="KNOX Blue Navy Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">KNOX</span>
+                <span class="jacket-model">Blue Navy Jacket</span>
+            </div>
         </div>
         <!-- Right side - lower -->
-        <div class="jacket-item" style="bottom: 22%; right: 4%; transform: rotate(-7deg);">
-            <img src="jackets/b969bba3af3c94b29409049c2fed717b.png" alt="Denim jean jacket">
+        <div class="jacket-container" style="bottom: 22%; right: 4%; transform: rotate(-7deg);">
+            <img src="jackets/LOUECHY Men's Corduroy Trucker Jacket.png" alt="LOUECHY Corduroy Trucker Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">LOUECHY</span>
+                <span class="jacket-model">Corduroy Trucker Jacket</span>
+            </div>
         </div>
         <!-- Top area - left -->
-        <div class="jacket-item" style="top: 3%; left: 20%; transform: rotate(4deg);">
-            <img src="jackets/b866ccaf4f2a77886b31bd7124fbecfc.png" alt="Black bomber jacket">
+        <div class="jacket-container" style="top: 3%; left: 20%; transform: rotate(4deg);">
+            <img src="jackets/O'Connell's Destroyer Goatskin Baracuta jacket .png" alt="O'Connell's Destroyer Goatskin Baracuta" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">O'Connell's</span>
+                <span class="jacket-model">Destroyer Goatskin Baracuta</span>
+            </div>
         </div>
         <!-- Top area - right -->
-        <div class="jacket-item" style="top: 6%; right: 18%; transform: rotate(-2deg);">
-            <img src="jackets/7081de40f5b0251b49c8acd187786162.png" alt="Khaki field jacket">
+        <div class="jacket-container" style="top: 6%; right: 18%; transform: rotate(-2deg);">
+            <img src="jackets/Stray Rats Dickies Eisenhower Jacket.png" alt="Stray Rats Dickies Eisenhower Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Stray Rats x Dickies</span>
+                <span class="jacket-model">Eisenhower Jacket</span>
+            </div>
         </div>
         <!-- Bottom area -->
-        <div class="jacket-item" style="bottom: 5%; left: 22%; transform: rotate(5deg);">
-            <img src="jackets/4855cab737ab8365b67fb364289eba1b.png" alt="Beige trench coat jacket">
+        <div class="jacket-container" style="bottom: 5%; left: 22%; transform: rotate(5deg);">
+            <img src="jackets/Vintage Polo Ralph Lauren Navy Jacket.png" alt="Vintage Polo Ralph Lauren Navy Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Polo Ralph Lauren</span>
+                <span class="jacket-model">Vintage Navy Jacket</span>
+            </div>
+        </div>
+
+        <!-- Female jackets - initially hidden but will be shown when gender toggle is switched -->
+        <!-- Top-left area -->
+        <div class="jacket-container" style="top: 5%; left: 8%; transform: rotate(-5deg); display: none;">
+            <img src="female-jackets/GAMIRA's Womens Coat.png" alt="GAMIRA's Women's Coat" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">GAMIRA</span>
+                <span class="jacket-model">Women's Coat</span>
+            </div>
+        </div>
+        <!-- Top-right area -->
+        <div class="jacket-container" style="top: 8%; right: 5%; transform: rotate(3deg); display: none;">
+            <img src="female-jackets/H & M Denim Jacket.png" alt="H&M Denim Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">H&M</span>
+                <span class="jacket-model">Denim Jacket</span>
+            </div>
+        </div>
+        <!-- Bottom-left area -->
+        <div class="jacket-container" style="bottom: 12%; left: 5%; transform: rotate(8deg); display: none;">
+            <img src="female-jackets/J. Crew Merlot Majesty Peacoat.png" alt="J. Crew Merlot Majesty Peacoat" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">J. Crew</span>
+                <span class="jacket-model">Merlot Majesty Peacoat</span>
+            </div>
+        </div>
+        <!-- Bottom-right area -->
+        <div class="jacket-container" style="bottom: 8%; right: 10%; transform: rotate(-4deg); display: none;">
+            <img src="female-jackets/Manokhi HANA Jacket.png" alt="Manokhi HANA Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Manokhi</span>
+                <span class="jacket-model">HANA Jacket</span>
+            </div>
+        </div>
+        <!-- Left side - upper -->
+        <div class="jacket-container" style="top: 22%; left: 3%; transform: rotate(-3deg); display: none;">
+            <img src="female-jackets/Micas Denim Metallic Button Outerwear.png" alt="Micas Denim Metallic Button Outerwear" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Micas</span>
+                <span class="jacket-model">Denim Metallic Button Outerwear</span>
+            </div>
+        </div>
+        <!-- Right side - upper -->
+        <div class="jacket-container" style="top: 18%; right: 2%; transform: rotate(6deg); display: none;">
+            <img src="female-jackets/Miu Miu padded corduroy-collar blouson.png" alt="Miu Miu Padded Corduroy-Collar Blouson" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Miu Miu</span>
+                <span class="jacket-model">Padded Corduroy-Collar Blouson</span>
+            </div>
+        </div>
+        <!-- Left side - lower -->
+        <div class="jacket-container" style="bottom: 25%; left: 6%; transform: rotate(2deg); display: none;">
+            <img src="female-jackets/Mos Mosh Wanda check pattern blaze.png" alt="Mos Mosh Wanda Check Pattern Blazer" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Mos Mosh</span>
+                <span class="jacket-model">Wanda Check Pattern Blazer</span>
+            </div>
+        </div>
+        <!-- Right side - lower -->
+        <div class="jacket-container" style="bottom: 22%; right: 4%; transform: rotate(-7deg); display: none;">
+            <img src="female-jackets/ReSee Pre Fall 2021 Flared Trench.png" alt="ReSee Pre Fall 2021 Flared Trench" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">ReSee</span>
+                <span class="jacket-model">Pre Fall 2021 Flared Trench</span>
+            </div>
+        </div>
+        <!-- Top area - left -->
+        <div class="jacket-container" style="top: 3%; left: 20%; transform: rotate(4deg); display: none;">
+            <img src="female-jackets/TALISHKO Fur Line Up Zip Up.png" alt="TALISHKO Fur Line Up Zip Up" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">TALISHKO</span>
+                <span class="jacket-model">Fur Line Up Zip Up</span>
+            </div>
+        </div>
+        <!-- Top area - right -->
+        <div class="jacket-container" style="top: 6%; right: 18%; transform: rotate(-2deg); display: none;">
+            <img src="female-jackets/Toogood The Skipper jacket.png" alt="Toogood The Skipper Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Toogood</span>
+                <span class="jacket-model">The Skipper Jacket</span>
+            </div>
+        </div>
+        <!-- Bottom area -->
+        <div class="jacket-container" style="bottom: 5%; left: 22%; transform: rotate(5deg); display: none;">
+            <img src="female-jackets/Totême Embroidered Scarf Jacket.png" alt="Totême Embroidered Scarf Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Totême</span>
+                <span class="jacket-model">Embroidered Scarf Jacket</span>
+            </div>
+        </div>
+        <!-- Additional female jacket -->
+        <div class="jacket-container" style="top: 15%; left: 15%; transform: rotate(-1deg); display: none;">
+            <img src="female-jackets/Zara houndstooth belted jacket.png" alt="Zara Houndstooth Belted Jacket" class="draggable-jacket">
+            <div class="jacket-tooltip">
+                <span class="jacket-brand">Zara</span>
+                <span class="jacket-model">Houndstooth Belted Jacket</span>
+            </div>
         </div>
 
         <!-- Center content with title and input -->
@@ -816,33 +1021,6 @@
                 isMuted: true
             },
 
-            maleJackets: [
-                'jackets/1bca19114c14bcc98f4d6e15e879d6f7.png',
-                'jackets/6f89fcf7a3acf73e976ddb0e29f86698.png',
-                'jackets/8bb74e4411d327f49d62dd4efab8fb74.png',
-                'jackets/9f0ac0679bc4a36419f25868b59c48f7.png',
-                'jackets/4210e5adb19db9dd0b7d0039603edd7a.png',
-                'jackets/eb7e044be40bb0d586e859627d538b35.png',
-                'jackets/cbba208285dffd2384a4cf4bd9706abc.png',
-                'jackets/b969bba3af3c94b29409049c2fed717b.png',
-                'jackets/b866ccaf4f2a77886b31bd7124fbecfc.png',
-                'jackets/7081de40f5b0251b49c8acd187786162.png',
-                'jackets/4855cab737ab8365b67fb364289eba1b.png'
-            ],
-
-            femaleJackets: [
-                'female-jackets/21f6b7709222770e2b0eedd79fa1c13c.png',
-                'female-jackets/25ec5a85e1277307df24fba42056e7e0.png',
-                'female-jackets/337a2fd7a2a36a75ae264e029a4af4cf.png',
-                'female-jackets/434e838433611705838bd4a77a6da09f.png',
-                'female-jackets/4d9b745d6bbca60f26f646602dad6043.png',
-                'female-jackets/50dadb183e061a20a137bbadd3e3fd49 (1).png',
-                'female-jackets/642e34e858d9918b1b58ac39f290c23e.png',
-                'female-jackets/875ebfb0a264ce780bcfbdc0f36e02bc.png',
-                'female-jackets/92c226e30acdcb619a99c45ce9e465ac.png',
-                'female-jackets/a1e8b3d608dbd20563676ebde76e0479.png',
-                'female-jackets/c758e1955b6ef58c4c6a52af952ccdf0.png'
-            ],
 
             elements: {},
 
@@ -856,13 +1034,6 @@
             initAudio() {
                 this.elements.music = document.getElementById('bg-music');
                 this.elements.muteBtn = document.getElementById('mute-btn');
-
-                // Try to play on first user interaction
-                document.addEventListener('click', () => {
-                    if (!this.state.isMuted && this.elements.music.paused) {
-                        this.elements.music.play().catch(() => {});
-                    }
-                }, { once: true });
             },
 
             cacheElements() {
@@ -908,15 +1079,30 @@
             toggleGender(isFemale) {
                 this.state.isMale = !isFemale;
 
-                // Update jacket images
-                const jackets = this.state.isMale ? this.maleJackets : this.femaleJackets;
-                const jacketItems = document.querySelectorAll('.jacket-item img');
+                // Get all jacket containers
+                const allContainers = document.querySelectorAll('.jacket-container');
+                
+                // First 11 are male jackets, rest are female jackets
+                const maleContainers = Array.from(allContainers).slice(0, 11);
+                const femaleContainers = Array.from(allContainers).slice(11);
 
-                jacketItems.forEach((img, index) => {
-                    if (index < jackets.length) {
-                        img.src = jackets[index];
-                    }
-                });
+                if (this.state.isMale) {
+                    // Show male jackets, hide female jackets
+                    maleContainers.forEach(container => {
+                        container.style.display = 'block';
+                    });
+                    femaleContainers.forEach(container => {
+                        container.style.display = 'none';
+                    });
+                } else {
+                    // Show female jackets, hide male jackets
+                    maleContainers.forEach(container => {
+                        container.style.display = 'none';
+                    });
+                    femaleContainers.forEach(container => {
+                        container.style.display = 'block';
+                    });
+                }
             },
 
             toggleMute() {
@@ -934,26 +1120,76 @@
             },
 
             initDraggable() {
-                const items = document.querySelectorAll('.jacket-item, .sticky-note');
+                const containers = document.querySelectorAll('.jacket-container');
 
-                items.forEach(item => {
+                containers.forEach(container => {
                     let isDragging = false;
                     let startX, startY, initialX, initialY;
+                    let touchTimer;
 
-                    item.addEventListener('mousedown', (e) => {
+                    // Mouse drag handlers
+                    container.addEventListener('mousedown', (e) => {
                         isDragging = true;
                         startX = e.clientX;
                         startY = e.clientY;
 
-                        const rect = item.getBoundingClientRect();
+                        const rect = container.getBoundingClientRect();
                         initialX = rect.left;
                         initialY = rect.top;
 
-                        item.style.position = 'fixed';
-                        item.style.left = initialX + 'px';
-                        item.style.top = initialY + 'px';
-                        item.style.right = 'auto';
-                        item.style.bottom = 'auto';
+                        container.style.position = 'fixed';
+                        container.style.left = initialX + 'px';
+                        container.style.top = initialY + 'px';
+                        container.style.right = 'auto';
+                        container.style.bottom = 'auto';
+                    });
+
+                    // Touch handlers for mobile
+                    container.addEventListener('touchstart', (e) => {
+                        // Show tooltip after brief touch
+                        touchTimer = setTimeout(() => {
+                            container.classList.add('touched');
+                        }, 200);
+                        
+                        // Start dragging
+                        isDragging = true;
+                        const touch = e.touches[0];
+                        startX = touch.clientX;
+                        startY = touch.clientY;
+
+                        const rect = container.getBoundingClientRect();
+                        initialX = rect.left;
+                        initialY = rect.top;
+
+                        container.style.position = 'fixed';
+                        container.style.left = initialX + 'px';
+                        container.style.top = initialY + 'px';
+                        container.style.right = 'auto';
+                        container.style.bottom = 'auto';
+                    });
+
+                    container.addEventListener('touchmove', (e) => {
+                        // Cancel tooltip if dragging
+                        clearTimeout(touchTimer);
+                        container.classList.remove('touched');
+                        
+                        if (!isDragging) return;
+
+                        const touch = e.touches[0];
+                        const dx = touch.clientX - startX;
+                        const dy = touch.clientY - startY;
+
+                        container.style.left = (initialX + dx) + 'px';
+                        container.style.top = (initialY + dy) + 'px';
+                    });
+
+                    container.addEventListener('touchend', () => {
+                        clearTimeout(touchTimer);
+                        // Hide tooltip after delay
+                        setTimeout(() => {
+                            container.classList.remove('touched');
+                        }, 2000);
+                        isDragging = false;
                     });
 
                     document.addEventListener('mousemove', (e) => {
@@ -962,8 +1198,8 @@
                         const dx = e.clientX - startX;
                         const dy = e.clientY - startY;
 
-                        item.style.left = (initialX + dx) + 'px';
-                        item.style.top = (initialY + dy) + 'px';
+                        container.style.left = (initialX + dx) + 'px';
+                        container.style.top = (initialY + dy) + 'px';
                     });
 
                     document.addEventListener('mouseup', () => {
@@ -1063,7 +1299,7 @@
                         ? `${location.state}, ${location.country}`
                         : location.country;
                     this.state.weatherData = weatherData;
-                    this.showResult(weatherData);
+                    await this.showResult(weatherData);
                 } catch (error) {
                     alert('Could not fetch weather data. Please try again.');
                 }
@@ -1071,19 +1307,41 @@
                 this.elements.loading.classList.remove('visible');
             },
 
-            showResult(weatherData) {
-                const decision = JacketDecision.makeDecision(weatherData);
+            async showResult(weatherData) {
+                try {
+                    const decision = await JacketDecision.makeDecision(weatherData);
 
-                this.elements.answer.textContent = decision.answer;
-                this.elements.answer.className = 'answer ' + decision.answer.toLowerCase();
-                this.elements.jacketType.textContent = decision.jacketType || '';
-                this.elements.reasoning.textContent = decision.reasoning;
-                this.elements.rainAdvice.textContent = decision.rainAdvice || '';
-                this.updateTemperatureDisplay(weatherData);
-                this.elements.windSpeed.textContent = `${weatherData.current.windSpeed} mph`;
-                this.elements.locationName.textContent = `${weatherData.location.name}, ${weatherData.location.country}`;
+                    this.elements.answer.textContent = decision.answer;
+                    this.elements.answer.className = 'answer ' + decision.answer.toLowerCase();
+                    this.elements.jacketType.textContent = decision.jacketType || '';
+                    this.elements.reasoning.textContent = decision.reasoning;
+                    this.elements.rainAdvice.textContent = decision.rainAdvice || '';
+                    this.updateTemperatureDisplay(weatherData);
+                    this.elements.windSpeed.textContent = `${weatherData.current.windSpeed} mph`;
+                    this.elements.locationName.textContent = `${weatherData.location.name}, ${weatherData.location.country}`;
 
-                this.elements.result.classList.add('visible');
+                    this.elements.result.classList.add('visible');
+                } catch (error) {
+                    console.error('Error making jacket decision:', error);
+                    // Fallback to basic decision if regional/seasonal logic fails
+                    const basicDecision = {
+                        answer: weatherData.current.temp < 60 ? 'YES' : 'NO',
+                        reasoning: `It's ${weatherData.current.temp}°F`,
+                        jacketType: weatherData.current.temp < 60 ? 'Light jacket' : null,
+                        rainAdvice: weatherData.precipitation.isRaining ? 'Rain expected' : ''
+                    };
+                    
+                    this.elements.answer.textContent = basicDecision.answer;
+                    this.elements.answer.className = 'answer ' + basicDecision.answer.toLowerCase();
+                    this.elements.jacketType.textContent = basicDecision.jacketType || '';
+                    this.elements.reasoning.textContent = basicDecision.reasoning;
+                    this.elements.rainAdvice.textContent = basicDecision.rainAdvice || '';
+                    this.updateTemperatureDisplay(weatherData);
+                    this.elements.windSpeed.textContent = `${weatherData.current.windSpeed} mph`;
+                    this.elements.locationName.textContent = `${weatherData.location.name}, ${weatherData.location.country}`;
+
+                    this.elements.result.classList.add('visible');
+                }
             },
 
             hideResult() {
