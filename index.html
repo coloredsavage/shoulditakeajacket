@@ -632,7 +632,7 @@
                 display: none;
             }
 
-            .jacket-container:nth-child(-n+4) {
+            .jacket-container.mobile-visible {
                 display: block;
             }
 
@@ -747,7 +747,7 @@
     <div class="container">
         <!-- Draggable jackets scattered around avoiding center -->
         <!-- Top-left area -->
-        <div class="jacket-container" style="top: 5%; left: 8%; transform: rotate(-5deg);">
+        <div class="jacket-container male" style="top: 5%; left: 8%; transform: rotate(-5deg);">
             <img src="jackets/Aime Leon Dore x Porsche 911SC Mechanic Jacket.png" alt="Aimé Leon Dore Porsche 911SC Mechanic Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Aimé Leon Dore</span>
@@ -755,7 +755,7 @@
             </div>
         </div>
         <!-- Top-right area -->
-        <div class="jacket-container" style="top: 8%; right: 5%; transform: rotate(3deg);">
+        <div class="jacket-container male" style="top: 8%; right: 5%; transform: rotate(3deg);">
             <img src="jackets/Alpha Industries Leather Flight Jacket.png" alt="Alpha Industries Leather Flight Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Alpha Industries</span>
@@ -763,7 +763,7 @@
             </div>
         </div>
         <!-- Bottom-left area -->
-        <div class="jacket-container" style="bottom: 12%; left: 5%; transform: rotate(8deg);">
+        <div class="jacket-container male" style="bottom: 12%; left: 5%; transform: rotate(8deg);">
             <img src="jackets/Ben Davis Work Jacket Stripped.png" alt="Ben Davis Work Jacket Stripped" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Ben Davis</span>
@@ -771,7 +771,7 @@
             </div>
         </div>
         <!-- Bottom-right area -->
-        <div class="jacket-container" style="bottom: 8%; right: 10%; transform: rotate(-4deg);">
+        <div class="jacket-container male" style="bottom: 8%; right: 10%; transform: rotate(-4deg);">
             <img src="jackets/Blousson Black Wool Jacket.png" alt="Blousson Black Wool Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Blousson</span>
@@ -779,7 +779,7 @@
             </div>
         </div>
         <!-- Left side - upper -->
-        <div class="jacket-container" style="top: 22%; left: 3%; transform: rotate(-3deg);">
+        <div class="jacket-container male" style="top: 22%; left: 3%; transform: rotate(-3deg);">
             <img src="jackets/Carhartt WIP Detroit jacket.png" alt="Carhartt WIP Detroit Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Carhartt WIP</span>
@@ -787,7 +787,7 @@
             </div>
         </div>
         <!-- Right side - upper -->
-        <div class="jacket-container" style="top: 18%; right: 2%; transform: rotate(6deg);">
+        <div class="jacket-container male" style="top: 18%; right: 2%; transform: rotate(6deg);">
             <img src="jackets/Days Ranger navy blue whipcord work jacket. .png" alt="Days Ranger Navy Blue Whipcord Work Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Days Ranger</span>
@@ -795,7 +795,7 @@
             </div>
         </div>
         <!-- Left side - lower -->
-        <div class="jacket-container" style="bottom: 25%; left: 6%; transform: rotate(2deg);">
+        <div class="jacket-container male" style="bottom: 25%; left: 6%; transform: rotate(2deg);">
             <img src="jackets/KNOX Blue Navy Jacket.png" alt="KNOX Blue Navy Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">KNOX</span>
@@ -803,7 +803,7 @@
             </div>
         </div>
         <!-- Right side - lower -->
-        <div class="jacket-container" style="bottom: 22%; right: 4%; transform: rotate(-7deg);">
+        <div class="jacket-container male" style="bottom: 22%; right: 4%; transform: rotate(-7deg);">
             <img src="jackets/LOUECHY Men's Corduroy Trucker Jacket.png" alt="LOUECHY Corduroy Trucker Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">LOUECHY</span>
@@ -811,7 +811,7 @@
             </div>
         </div>
         <!-- Top area - left -->
-        <div class="jacket-container" style="top: 3%; left: 20%; transform: rotate(4deg);">
+        <div class="jacket-container male" style="top: 3%; left: 20%; transform: rotate(4deg);">
             <img src="jackets/O'Connell's Destroyer Goatskin Baracuta jacket .png" alt="O'Connell's Destroyer Goatskin Baracuta" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">O'Connell's</span>
@@ -819,7 +819,7 @@
             </div>
         </div>
         <!-- Top area - right -->
-        <div class="jacket-container" style="top: 6%; right: 18%; transform: rotate(-2deg);">
+        <div class="jacket-container male" style="top: 6%; right: 18%; transform: rotate(-2deg);">
             <img src="jackets/Stray Rats Dickies Eisenhower Jacket.png" alt="Stray Rats Dickies Eisenhower Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Stray Rats x Dickies</span>
@@ -827,7 +827,7 @@
             </div>
         </div>
         <!-- Bottom area -->
-        <div class="jacket-container" style="bottom: 5%; left: 22%; transform: rotate(5deg);">
+        <div class="jacket-container male" style="bottom: 5%; left: 22%; transform: rotate(5deg);">
             <img src="jackets/Vintage Polo Ralph Lauren Navy Jacket.png" alt="Vintage Polo Ralph Lauren Navy Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Polo Ralph Lauren</span>
@@ -837,7 +837,7 @@
 
         <!-- Female jackets - initially hidden but will be shown when gender toggle is switched -->
         <!-- Top-left area -->
-        <div class="jacket-container" style="top: 5%; left: 8%; transform: rotate(-5deg); display: none;">
+        <div class="jacket-container female" style="top: 5%; left: 8%; transform: rotate(-5deg); display: none;">
             <img src="female-jackets/GAMIRA's Womens Coat.png" alt="GAMIRA's Women's Coat" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">GAMIRA</span>
@@ -845,7 +845,7 @@
             </div>
         </div>
         <!-- Top-right area -->
-        <div class="jacket-container" style="top: 8%; right: 5%; transform: rotate(3deg); display: none;">
+        <div class="jacket-container female" style="top: 8%; right: 5%; transform: rotate(3deg); display: none;">
             <img src="female-jackets/H & M Denim Jacket.png" alt="H&M Denim Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">H&M</span>
@@ -853,7 +853,7 @@
             </div>
         </div>
         <!-- Bottom-left area -->
-        <div class="jacket-container" style="bottom: 12%; left: 5%; transform: rotate(8deg); display: none;">
+        <div class="jacket-container female" style="bottom: 12%; left: 5%; transform: rotate(8deg); display: none;">
             <img src="female-jackets/J. Crew Merlot Majesty Peacoat.png" alt="J. Crew Merlot Majesty Peacoat" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">J. Crew</span>
@@ -861,7 +861,7 @@
             </div>
         </div>
         <!-- Bottom-right area -->
-        <div class="jacket-container" style="bottom: 8%; right: 10%; transform: rotate(-4deg); display: none;">
+        <div class="jacket-container female" style="bottom: 8%; right: 10%; transform: rotate(-4deg); display: none;">
             <img src="female-jackets/Manokhi HANA Jacket.png" alt="Manokhi HANA Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Manokhi</span>
@@ -869,7 +869,7 @@
             </div>
         </div>
         <!-- Left side - upper -->
-        <div class="jacket-container" style="top: 22%; left: 3%; transform: rotate(-3deg); display: none;">
+        <div class="jacket-container female" style="top: 22%; left: 3%; transform: rotate(-3deg); display: none;">
             <img src="female-jackets/Micas Denim Metallic Button Outerwear.png" alt="Micas Denim Metallic Button Outerwear" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Micas</span>
@@ -877,7 +877,7 @@
             </div>
         </div>
         <!-- Right side - upper -->
-        <div class="jacket-container" style="top: 18%; right: 2%; transform: rotate(6deg); display: none;">
+        <div class="jacket-container female" style="top: 18%; right: 2%; transform: rotate(6deg); display: none;">
             <img src="female-jackets/Miu Miu padded corduroy-collar blouson.png" alt="Miu Miu Padded Corduroy-Collar Blouson" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Miu Miu</span>
@@ -885,7 +885,7 @@
             </div>
         </div>
         <!-- Left side - lower -->
-        <div class="jacket-container" style="bottom: 25%; left: 6%; transform: rotate(2deg); display: none;">
+        <div class="jacket-container female" style="bottom: 25%; left: 6%; transform: rotate(2deg); display: none;">
             <img src="female-jackets/Mos Mosh Wanda check pattern blaze.png" alt="Mos Mosh Wanda Check Pattern Blazer" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Mos Mosh</span>
@@ -893,7 +893,7 @@
             </div>
         </div>
         <!-- Right side - lower -->
-        <div class="jacket-container" style="bottom: 22%; right: 4%; transform: rotate(-7deg); display: none;">
+        <div class="jacket-container female" style="bottom: 22%; right: 4%; transform: rotate(-7deg); display: none;">
             <img src="female-jackets/ReSee Pre Fall 2021 Flared Trench.png" alt="ReSee Pre Fall 2021 Flared Trench" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">ReSee</span>
@@ -901,7 +901,7 @@
             </div>
         </div>
         <!-- Top area - left -->
-        <div class="jacket-container" style="top: 3%; left: 20%; transform: rotate(4deg); display: none;">
+        <div class="jacket-container female" style="top: 3%; left: 20%; transform: rotate(4deg); display: none;">
             <img src="female-jackets/TALISHKO Fur Line Up Zip Up.png" alt="TALISHKO Fur Line Up Zip Up" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">TALISHKO</span>
@@ -909,7 +909,7 @@
             </div>
         </div>
         <!-- Top area - right -->
-        <div class="jacket-container" style="top: 6%; right: 18%; transform: rotate(-2deg); display: none;">
+        <div class="jacket-container female" style="top: 6%; right: 18%; transform: rotate(-2deg); display: none;">
             <img src="female-jackets/Toogood The Skipper jacket.png" alt="Toogood The Skipper Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Toogood</span>
@@ -917,7 +917,7 @@
             </div>
         </div>
         <!-- Bottom area -->
-        <div class="jacket-container" style="bottom: 5%; left: 22%; transform: rotate(5deg); display: none;">
+        <div class="jacket-container female" style="bottom: 5%; left: 22%; transform: rotate(5deg); display: none;">
             <img src="female-jackets/Toteme Embroidered Scarf Jacket.png" alt="Totême Embroidered Scarf Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Totême</span>
@@ -925,7 +925,7 @@
             </div>
         </div>
         <!-- Additional female jacket -->
-        <div class="jacket-container" style="top: 15%; left: 15%; transform: rotate(-1deg); display: none;">
+        <div class="jacket-container female" style="top: 15%; left: 15%; transform: rotate(-1deg); display: none;">
             <img src="female-jackets/Zara houndstooth belted jacket.png" alt="Zara Houndstooth Belted Jacket" class="draggable-jacket">
             <div class="jacket-tooltip">
                 <span class="jacket-brand">Zara</span>
@@ -1029,6 +1029,17 @@
                 this.bindEvents();
                 this.initDraggable();
                 this.initAudio();
+                this.initMobileJackets();
+            },
+
+            initMobileJackets() {
+                // Initialize mobile-visible class for first 4 male jackets (default)
+                const maleContainers = document.querySelectorAll('.jacket-container.male');
+                maleContainers.forEach((container, index) => {
+                    if (index < 4) {
+                        container.classList.add('mobile-visible');
+                    }
+                });
             },
 
             initAudio() {
@@ -1079,28 +1090,39 @@
             toggleGender(isFemale) {
                 this.state.isMale = !isFemale;
 
-                // Get all jacket containers
-                const allContainers = document.querySelectorAll('.jacket-container');
-                
-                // First 11 are male jackets, rest are female jackets
-                const maleContainers = Array.from(allContainers).slice(0, 11);
-                const femaleContainers = Array.from(allContainers).slice(11);
+                // Get all jacket containers by class
+                const maleContainers = document.querySelectorAll('.jacket-container.male');
+                const femaleContainers = document.querySelectorAll('.jacket-container.female');
 
                 if (this.state.isMale) {
                     // Show male jackets, hide female jackets
-                    maleContainers.forEach(container => {
+                    maleContainers.forEach((container, index) => {
                         container.style.display = '';
+                        // Add mobile-visible class to first 4
+                        if (index < 4) {
+                            container.classList.add('mobile-visible');
+                        } else {
+                            container.classList.remove('mobile-visible');
+                        }
                     });
                     femaleContainers.forEach(container => {
                         container.style.display = 'none';
+                        container.classList.remove('mobile-visible');
                     });
                 } else {
                     // Show female jackets, hide male jackets
                     maleContainers.forEach(container => {
                         container.style.display = 'none';
+                        container.classList.remove('mobile-visible');
                     });
-                    femaleContainers.forEach(container => {
+                    femaleContainers.forEach((container, index) => {
                         container.style.display = '';
+                        // Add mobile-visible class to first 4
+                        if (index < 4) {
+                            container.classList.add('mobile-visible');
+                        } else {
+                            container.classList.remove('mobile-visible');
+                        }
                     });
                 }
             },
